@@ -15,12 +15,13 @@ parliamentarians_to_download <- read_json("data/source/lop/parliamentarians.json
 
 parliamentarian_urls <- parliamentarians_to_download %>%
   select(person_id) %>%
-  mutate(url = paste0("https://lop.parl.ca/ParlinfoWebApi/Person/GetPersonWebProfile/", person_id, "?callback=1"))
+  mutate(url = paste0("https://lop.parl.ca/ParlinfoWebApi/Person/GetPersonWebProfile/", person_id, "?callback=1")) ## JSONP :) [we'll remove this in post]
 
 ## Write out to a file
 parliamentarian_urls %>%
   select(url) %>%
   write_csv("data/out/parliamentarian-urls.csv", col_names = FALSE)
 
-## In terminal, navigate to `data/members`
-## Run this curl: xargs -n 1 curl -O < ../parliamentarian-urls.csv
+## In terminal, navigate to `data/source/lop/parliamentarians`
+## (NB: `-P 8` is your number of parallel downloader threads)
+## Run this curl: xargs -n 1 -P 8 curl -O < ../../../out/parliamentarian-urls.csv
